@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortigate Proxy Manager</title>
+    <style>
+
+        :root {
+            --text-colour: #333333;
+            --bg: #f8f9fa;
+            --lvl-1: #ffffff;
+            --lvl-2: #f1f3f4;
+            --lvl-3: #e9ecef;
+            --lvl-4: #dee2e6;
+            --lvl-5: #ced4da;
+            --lvl-6: #adb5bd;
+            --lvl-7: #868e96;
+            --lvl-8: #6c757d;
+            --lvl-9: #495057;
+            --lvl-10: #343a40;
+            
+            /* 状态颜色 */
+            --success-color: ##47fe71;
+            --danger-color: #ff041d;
+            --info-color: #007bff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-colour: #ffffff;
+                --bg: #141414;
+                --lvl-1: #112123;
+                --lvl-2: #113536;
+                --lvl-3: #144848;
+                --lvl-4: #146262;
+                --lvl-5: #138585;
+                --lvl-6: #13a8a8;
+                --lvl-7: #33bcb7;
+                --lvl-8: #58d1c9;
+                --lvl-9: #84e2d8;
+                --lvl-10: #b2f1e8;
+
+                /* 状态颜色 */
+                --success-color: #35af51;
+                --danger-color: #de0016;
+                --info-color: #007bff;
+                --shadow-color: rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg);
+        }
+
+        .container {
+            background: var(--lvl-1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+
+        h1 {
+            color: var(--text-colour);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+		@media only screen and (max-device-width : 768px) {
+          .controller {
+              display: flex;
+              flex-direction: column;
+              gap: 15px;
+              align-items: stretch;
+              padding: 24px 12px;
+              margin-bottom: 30px;
+              background: var(--lvl-2);
+              border-radius: 8px;
+              border-left: 4px solid var(--info-color);
+          }
+
+          .controller .status-info {
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+              background: var(--lvl-3);
+              align-items: center;
+              border-radius: 4px;
+              min-height: 60px;
+              margin: 0;
+              padding: 10px 25px;
+          }
+
+          .button-container {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding: 0;
+              min-height: 60px;
+          }
+          
+          .controller .status-info h3 {
+                color: var(--text-colour);
+        }
+
+            .controller .status-info > div {
+                color: var(--text-colour);
+            }
+    
+            .status-button {
+                font-size: 16px;
+                padding: 12px 20px;
+                height: 44px;
+                width: 100%;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+			}
+
+		@media only screen and (min-device-width : 768px) {
+              .controller {
+                  display: flex;
+                  gap: 20px;
+                  align-items: stretch;
+                  padding: 24px 12px;
+                  margin-bottom: 30px;
+                  background: var(--lvl-2);
+                  border-radius: 8px;
+                  border-left: 4px solid var(--info-color);
+              }
+    
+              .controller .status-info {
+                  flex: 2;
+                  display: flex;
+                  justify-content: space-between;
+                  background: var(--lvl-3);
+                  align-items: center;
+                  border-radius: 4px;
+                  min-height: 60px;
+              }
+    
+              .button-container {
+                  flex: 1;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding: 15px;
+                  min-height: 60px;
+              }
+              
+              .controller .status-info h3 {
+                color: var(--text-colour);
+        }
+
+            .controller .status-info > div {
+                color: var(--text-colour);
+            }
+    
+            .status-button {
+                font-size: 16px;
+                padding: 12px 20px;
+                height: 44px;
+
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+		}
+
+
+        
+        .status-button.connected {
+            background-color: var(--success-color);
+            color: var(--text-colour);
+        }
+
+        .status-button.disconnected {
+            background-color: var(--lvl-3);
+            border: 1px solid #007bff;
+            color: var(--text-colour);
+        }
+
+        .status-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .status-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-info {
+            width: 80%;
+            margin-left: 15px;
+            padding: 10px 25px;
+            background: var(--lvl-3);
+            border-radius: 4px;
+            border: 1px solid var(--lvl-4);
+        }
+
+        .debug-section {
+            margin-top: 30px;
+            /* padding: 20px; */
+            /* background: var(--lvl-2); */
+            border-radius: 8px;
+            /* border-left: 4px solid var(--success-color); */
+        }
+
+        .debug-toggle {
+            margin-bottom: 15px;
+        }
+
+        .debug-toggle input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+            transform: scale(1.2);
+            opacity: 0.5;
+        }
+
+        .debug-toggle label {
+            font-weight: 500;
+            color: color-mix(in srgb, var(--text-colour) 50%, transparent);
+        }
+
+        .debug-info {
+            background: var(--lvl-3);
+            color: var(--text-colour);
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .debug-info.visible {
+            display: block;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--lvl-4);
+            border-top: 3px solid var(--info-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .alert.error {
+            background-color: var(--lvl-2);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        .alert.success {
+            background-color: var(--lvl-2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .alert.info {
+            background-color: var(--lvl-2);
+            color: var(--info-color);
+            border: 1px solid var(--info-color);
+        }
+
+        .health-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .health-indicator.healthy {
+            background-color: var(--success-color);
+        }
+
+        .health-indicator.unhealthy {
+            background-color: var(--danger-color);
+        }
+
+        .health-indicator.unknown {
+            background-color: var(--lvl-8);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Fortigate Proxy Manager</h1>
+
+        <!-- 状态控制区域 -->
+        <div class="controller">
+            <div class="status-info">
+                <h3>连接状态</h3>
+                <div id="statusInfo">
+                    <span class="health-indicator unknown"></span>
+                    <span>正在检查连接状态...</span>
+                </div>
+            </div>
+            <div class="button-container">
+                <button id="statusButton" class="status-button disconnected" onclick="toggleConnection()">
+                    <span id="buttonText">连接</span>
+                    <div id="buttonLoading" class="loading" style="display: none;"></div>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- 调试区域 -->
+        <div class="debug-section">
+            <div class="debug-toggle">
+                <input type="checkbox" id="debugToggle" onchange="toggleDebug()">
+                <label for="debugToggle">启用调试信息</label>
+            </div>
+
+            <div id="debugInfo" class="debug-info"></div>
+        </div>
+
+        <!-- 消息提示区域 -->
+        <div id="alertContainer"></div>
+    </div>
+
+    <script>
+        // 全局变量
+        let isConnected = false;
+        let debugEnabled = false;
+        let debugInterval = null;
+        let statusInterval = null;
+        let renewalInterval = null;
+        const API_BASE = window.location.origin;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            checkStatus();
+        });
+
+        // 显示提示消息
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert ${type}`;
+            alertDiv.textContent = message;
+
+            alertContainer.appendChild(alertDiv);
+
+            // 3秒后自动移除
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 3000);
+        }
+
+        // 检查连接状态
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/status`);
+                const data = await response.json();
+                const wasConnected = isConnected;
+                isConnected = data.has_active_proxy;
+                updateStatusButton();
+                updateStatusInfo();
+
+                // 如果连接状态发生变化，管理续期定时器
+                if (wasConnected !== isConnected) {
+                    if (isConnected) {
+                        startRenewalInterval();
+                    } else {
+                        stopRenewalInterval();
+                    }
+                }
+
+            } catch (error) {
+                console.error('检查状态失败:', error);
+                updateStatusInfo({
+                    has_active_proxy: false,
+                    error: '无法连接到服务器'
+                });
+                isConnected = false;
+                stopRenewalInterval();
+            }
+        }
+
+        // 更新状态按钮
+        function updateStatusButton() {
+            const button = document.getElementById('statusButton');
+            const buttonText = document.getElementById('buttonText');
+
+            if (isConnected) {
+                button.className = 'status-button connected';
+                buttonText.textContent = '断开连接';
+            } else {
+                button.className = 'status-button disconnected';
+                buttonText.textContent = '连接';
+            }
+        }
+
+        // 更新状态信息
+        function updateStatusInfo() {
+            const statusInfo = document.getElementById('statusInfo');
+            const indicator = statusInfo.querySelector('.health-indicator');
+            const textSpan = statusInfo.querySelector('span:last-child');
+
+            if (isConnected) {
+                indicator.className = 'health-indicator healthy';
+                textSpan.textContent = '已连接';
+            } else {
+                indicator.className = 'health-indicator unhealthy';
+                textSpan.textContent = '未连接';
+            }
+        }
+
+        // 切换连接状态
+        async function toggleConnection() {
+            const button = document.getElementById('statusButton');
+            const buttonText = document.getElementById('buttonText');
+            const buttonLoading = document.getElementById('buttonLoading');
+
+            // 禁用按钮并显示加载动画
+            button.disabled = true;
+            buttonText.textContent = isConnected ? '断开连接中...' : '连接中...';
+            buttonLoading.style.display = 'inline-block';
+
+            try {
+
+                const endpoint = isConnected ? '/disconnect' : '/connect';
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log(data.message || (isConnected ? '连接已断开' : '连接成功'), 'success');
+                    // 立即检查状态并重启轮询
+                    await checkStatus();
+                } else {
+                    showAlert(data.detail || '操作失败', 'error');
+                }
+
+            } catch (error) {
+                console.error('切换连接失败:', error);
+                showAlert('网络错误，请稍后重试', 'error');
+            } finally {
+                // 恢复按钮状态
+                button.disabled = false;
+                buttonLoading.style.display = 'none';
+            }
+        }
+
+        // 开始续期定时器
+        function startRenewalInterval() {
+            if (renewalInterval) return;
+
+            renewalInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/connect`, {
+                        method: 'POST'
+                    });
+
+                    if (!response.ok) {
+                        console.warn('续期失败:', response.status);
+                        // 续期失败时重新检查状态
+                        await checkStatus();
+                    }
+
+                } catch (error) {
+                    console.error('续期请求失败:', error);
+                    // 续期失败时重新检查状态
+                    await checkStatus();
+                }
+            }, 60 * 5 * 1000); // 每5分钟续期一次
+        }
+
+        // 停止续期定时器
+        function stopRenewalInterval() {
+            if (renewalInterval) {
+                clearInterval(renewalInterval);
+                renewalInterval = null;
+            }
+        }
+
+        // 切换调试模式
+        function toggleDebug() {
+            const debugToggle = document.getElementById('debugToggle');
+            const debugInfo = document.getElementById('debugInfo');
+
+            debugEnabled = debugToggle.checked;
+
+            if (debugEnabled) {
+                debugInfo.classList.add('visible');
+                startDebugPolling();
+            } else {
+                debugInfo.classList.remove('visible');
+                stopDebugPolling();
+            }
+        }
+
+        // 开始调试信息轮询
+        function startDebugPolling() {
+            if (debugInterval) return;
+
+            debugInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/health`);
+                    const data = await response.json();
+
+                    const debugInfo = document.getElementById('debugInfo');
+                    const timestamp = new Date().toLocaleString();
+
+                    let debugText = `=== 调试信息 (${timestamp}) ===\n`;
+                    debugText += `状态: ${data.status}\n`;
+                    debugText += `连接: ${data.connected ? '已连接' : '未连接'}\n`;
+                    debugText += `主机: ${data.host || 'N/A'}\n`;
+                    debugText += `模式: ${data.mode || 'N/A'}\n`;
+                    debugText += `活动计时器: ${data.active_timers || 0}\n`;
+                    debugText += `地址对象: ${data.address_objects || 0}\n`;
+                    debugText += `队列大小: ${data.queue_size || 0}\n`;
+
+                    if (data.last_error) {
+                        debugText += `最后错误: ${data.last_error}\n`;
+                    }
+
+                    debugText += `内存使用: ${(data.memory_usage || 0).toFixed(2)} MB\n`;
+                    debugText += `运行时间: ${data.uptime || 'N/A'}\n`;
+
+                    debugInfo.textContent = debugText;
+
+                } catch (error) {
+                    const debugInfo = document.getElementById('debugInfo');
+                    debugInfo.textContent = `调试信息获取失败: ${error.message}`;
+                }
+            }, 100); // 每100毫秒更新一次
+        }
+
+        // 停止调试信息轮询
+        function stopDebugPolling() {
+            if (debugInterval) {
+                clearInterval(debugInterval);
+                debugInterval = null;
+            }
+        }
+
+        // 页面卸载时清理所有定时器
+        window.addEventListener('beforeunload', function() {
+            stopDebugPolling();
+            stopRenewalInterval();
+        });
+
+    </script>
+</body>
+
+</html>
