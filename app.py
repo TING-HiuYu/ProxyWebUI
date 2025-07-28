@@ -35,8 +35,8 @@ try:
 except ImportError:
     # 如果配置文件不存在，使用默认值
     FORTIGATE_IP = "127.0.0.1"
-    FORTIGATE_API_TOKEN = "123123"
-    ADDRESS_GROUP_NAME = "132123"
+    FORTIGATE_API_TOKEN = ""
+    ADDRESS_GROUP_NAME = "Proxied Devices"
     TIMER_DURATION = 2 * 60 * 60
     SERVER_HOST = "0.0.0.0"
     SERVER_PORT = 8000
