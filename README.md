@@ -24,20 +24,20 @@ requirements.txt    # Python 依赖包列表
 ## 部署指南
 
 ### 1. Fortigate 配置用户组
-如图添加用户组:
-- <img width="358" height="270" alt="截屏2025-07-29 03 24 53" src="https://github.com/user-attachments/assets/a6051c3f-63d2-4c16-bfe5-2f0c1c61033f" />
+如图添加用户组:  
+<img width="358" height="270" alt="截屏2025-07-29 03 24 53" src="https://github.com/user-attachments/assets/a6051c3f-63d2-4c16-bfe5-2f0c1c61033f" />
 
 ### 2. Fortigate 配置一个策略路由
-如图配置策略路由:
-- <img width="475" height="504" alt="截屏2025-07-29 03 17 18" src="https://github.com/user-attachments/assets/67d16d5f-fd53-4ca9-a944-c357e0b869a5" />
+如图配置策略路由:  
+<img width="475" height="504" alt="截屏2025-07-29 03 17 18" src="https://github.com/user-attachments/assets/67d16d5f-fd53-4ca9-a944-c357e0b869a5" />
 
 ### 3. Fortigate 配置一个REST API用户
-权限节点如下：
-- <img width="320" height="546" alt="截屏2025-07-29 03 29 35" src="https://github.com/user-attachments/assets/6d8c7867-6cbf-4ce5-bef6-31ad8be7189b" />
+权限节点如下:  
+<img width="320" height="546" alt="截屏2025-07-29 03 29 35" src="https://github.com/user-attachments/assets/6d8c7867-6cbf-4ce5-bef6-31ad8be7189b" />
 
 ### 4. 下载python文件到服务器
-- 对于宝塔面板，可以在电脑上下载然后直接上传所有文件到服务器
-- 纯CLI，请运行
+对于宝塔面板，可以在电脑上下载然后直接上传所有文件到服务器  
+纯CLI，请运行
 ```bash
 git clone https://github.com/TING-HiuYu/ProxyWebUI
 
@@ -70,6 +70,7 @@ TIMEZONE = "Asia/Shanghai"
 
 ### 7. 启动服务
 ```bash
+source ./.venv/bin/activate #如果没有激活虚拟环境
 python app.py
 ```
 
