@@ -46,7 +46,7 @@ requirements.txt    # Python 依赖包列表
 对于宝塔面板，可以在电脑上下载然后直接上传所有文件到服务器  
 纯CLI，请运行
 ```bash
-git clone https://github.com/TING-HiuYu/ProxyWebUI
+git clone https://github.com/TING-HiuYu/ProxyWebUI.git
 
 
 ```
