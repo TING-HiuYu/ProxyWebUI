@@ -17,14 +17,46 @@ config.py           # 配置文件（需根据实际环境修改）
 index.html          # 前端页面（可直接访问）
 requirements.txt    # Python 依赖包列表
 ```
+## 系统需求
+- 一台Fortigate防火墙作为出口防火墙部署
+- 一台有Python 3.11环境的服务器，推荐使用Debian安装宝塔面板进行管理
 
-## 快速开始
-### 1. 安装依赖
+## 部署指南
+
+### 1. Fortigate 配置用户组
+如图添加用户组:L
+<img width="358" height="270" alt="截屏2025-07-29 03 24 53" src="https://github.com/user-attachments/assets/a6051c3f-63d2-4c16-bfe5-2f0c1c61033f" />
+
+### 2. Fortigate 配置一个策略路由
+如图配置策略路由:
+<img width="475" height="504" alt="截屏2025-07-29 03 17 18" src="https://github.com/user-attachments/assets/67d16d5f-fd53-4ca9-a944-c357e0b869a5" />
+
+### 3. Fortigate 配置一个REST API用户
+权限节点如下：
+<img width="320" height="546" alt="截屏2025-07-29 03 29 35" src="https://github.com/user-attachments/assets/6d8c7867-6cbf-4ce5-bef6-31ad8be7189b" />
+
+### 4. 下载python文件到服务器
+- 对于宝塔面板，可以在电脑上下载然后直接上传所有文件到服务器
+- 纯CLI，请运行
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/TING-HiuYu/ProxyWebUI
+
+
 ```
 
-### 2. 配置参数
+### 5. 服务器上安装依赖
+```bash
+pip install virtualenv 
+python -m venv .venv
+#以上两步如果有现成的虚拟环境可以忽略
+
+source ./.venv/bin/activate
+pip install -r requirements.txt
+
+
+```
+
+### 6. 服务器上配置参数
 编辑 `config.py`，填写 Fortigate 的 IP、API Token、地址组名称等信息：
 ```python
 FORTIGATE_IP = "your_fortigate_ip"           # Fortigate防火墙IP地址
@@ -32,16 +64,16 @@ FORTIGATE_API_TOKEN = "your_token"    # REST API Token
 ADDRESS_GROUP_NAME = "Proxied Devices" # 策略路由地址组名称,也可以自行更改
 TIMER_DURATION = 2 * 60 * 60           # 计时器持续时间（秒）
 SERVER_HOST = "0.0.0.0"
-SERVER_PORT = 8000
+SERVER_PORT = 8000 #运行端口，可以自行修改
 TIMEZONE = "Asia/Shanghai"
 ```
 
-### 3. 启动服务
+### 7. 启动服务
 ```bash
 python app.py
 ```
 
-### 4. 访问前端页面
+### 8. 访问前端页面
 浏览器访问 [http://localhost:8000/](http://localhost:8000/) 即可使用。
 
 ## API 说明
@@ -51,19 +83,12 @@ python app.py
 - `GET /health`      ：健康检查
 - `GET /api`         ：API 信息
 
-## 依赖环境
-- Python 3.8+
-- FastAPI
-- Uvicorn
-- requests
-- APScheduler
-- 其他依赖见 `requirements.txt`
-
 ## 注意事项
 - 需在 Fortigate 上提前创建 API Token，并赋予相应权限
 - 地址组需提前在 Fortigate 上创建
 - 生产环境建议使用 HTTPS 部署
-- 默认忽略 SSL 证书验证（如有安全要求请修改）
+- 默认忽略 SSL 证书验证（如有安全要求请自行修改代码）
+- README文件和很多注释都是AI生成，有不明白的请提issue
 
 ## License
 MIT
