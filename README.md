@@ -3,8 +3,8 @@
 Proxy WebUI 是一个基于 FastAPI 的 Web 服务，用于通过 Fortigate 防火墙 API 动态管理代理地址对象和地址组，搭配策略路由和OpenWRT可以实现局域网用户通过连接梯子。如果有需求也可以自己修改代码以支持其他的路由器（只要是支持REST API的都可以的），关键是找到接口和返回的数据结构。
 
 客户端样式Demo:  
-<img width="540" height="960" alt="截屏2025-07-29 012124412" src="https://github.com/user-attachments/assets/add0dd4b-6c67-4c84-a8f3-a0801f382c9b" />
-<img width="540" height="960" alt="截屏2025-07-29 012124412" src="https://github.com/user-attachments/assets/1e78acdd-3c39-487c-a91f-b525076809f8" />
+<img  height="480" alt="截屏2025-07-29 012124412" src="https://github.com/user-attachments/assets/add0dd4b-6c67-4c84-a8f3-a0801f382c9b" />
+<img  height="480" alt="截屏2025-07-29 012124412" src="https://github.com/user-attachments/assets/1e78acdd-3c39-487c-a91f-b525076809f8" />
 
 ## 实现原理
 其实非常简单，就是在通过web服务器读取客户端源地址，然后添加该地址对象进策略路由作用的源地址组里面。
