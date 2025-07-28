@@ -1,6 +1,6 @@
 # Fortigate Proxy Manager
 
-Fortigate Proxy Manager 是一个基于 FastAPI 的 Web 服务，用于通过 Fortigate 防火墙 API 动态管理代理地址对象和地址组，搭配策略路由和Passwall可以实现局域网用户通过连接梯子。
+Fortigate Proxy Manager 是一个基于 FastAPI 的 Web 服务，用于通过 Fortigate 防火墙 API 动态管理代理地址对象和地址组，搭配策略路由和Passwall可以实现局域网用户通过连接梯子。如果有需求也可以自己修改代码以支持其他的路由器（只要是支持REST API的都可以的），关键是找到接口和返回的数据结构。
 
 ## 功能特性
 - 一键添加/移除 Fortigate 地址对象到指定地址组
