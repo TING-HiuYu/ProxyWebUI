@@ -1,0 +1,42 @@
+name: Release Artifacts
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set release version
+        id: vars
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Create release directory
+        run: |
+          mkdir release
+          shopt -s extglob
+          cp -r !(LICENSE|.gitignore|.github|release) release/
+
+      - name: Create tar.gz archive
+        run: |
+          cd release
+          tar -czf ../ProxyWebUI-${{ env.RELEASE_VERSION }}.tar.gz .
+
+      - name: Create zip archive
+        run: |
+          cd release
+          zip -r ../ProxyWebUI-${{ env.RELEASE_VERSION }}.zip .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ProxyWebUI-${{ env.RELEASE_VERSION }}.tar.gz
+            ProxyWebUI-${{ env.RELEASE_VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
